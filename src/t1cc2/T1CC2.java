@@ -26,9 +26,9 @@ public class T1CC2 {
         CharStream input = CharStreams.fromFileName(args[0]);
         File saida = new File(args[1]);
         PrintWriter pw = new PrintWriter(new FileOutputStream(saida));
-        LuaLexer lexer = new LuaLexer(input);
+        LALexer lexer = new LALexer(input);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        LuaParser parser = new LuaParser(tokenStream);
+        LAParser parser = new LAParser(tokenStream);
         parser.programa();
         pw.print("Conteudo");
         pw.flush();
