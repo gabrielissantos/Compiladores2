@@ -1,4 +1,4 @@
-// Generated from .\Desktop\materias\1. Compiladores 2\T1\Compiladores2\src\t1cc2\LA.g4 by ANTLR 4.7.2
+// Generated from C:\Users\Gabrieli Santos\Desktop\materias\1. Compiladores 2\T1\Compiladores2\src\t1cc2\LA.g4 by ANTLR 4.7.2
 package t1cc2;
 
 import org.antlr.v4.runtime.ParserRuleContext;
