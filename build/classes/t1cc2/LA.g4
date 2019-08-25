@@ -12,6 +12,12 @@ NUM_REAL : ('0' .. '9')+ '.' ('0' .. '9')*
 CADEIA	: '\'' ~('\n' | '\r' | '\'')* '\'' | '"' ~('\n' | '\r' | '"')* '"'
         ;
 
+ERROCHAR: .
+        ;
+
+COMMENTNFECHADO: '{' .*? 
+               ;
+
 programa : declaracoes 'algoritmo' corpo 'fim_algoritmo'
          ;
 
