@@ -22,21 +22,24 @@ public class T1CC2 {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
-    //string com o caminho do projeto de casos de teste
+
     public static void main(String[] args) throws IOException, RecognitionException {
-        /*
+        SaidaParser out = new SaidaParser();
         CharStream input = CharStreams.fromFileName(args[0]); //entrada
         File saida = new File(args[1]);
         PrintWriter pw = new PrintWriter(new FileOutputStream(saida));
         LALexer lexer = new LALexer(input);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         LAParser parser = new LAParser(tokenStream);
+        parser.addErrorListener(new ErrorListener(out));
         parser.programa();
-        pw.print("Conteudo");
+        out.println("Fim da compilacao");
+        pw.print(out.toString());
         pw.flush();
-        pw.close(); */
-
+        pw.close();
+        /*
         SaidaParser out = new SaidaParser();
         CharStream input = CharStreams.fromFileName(args[0]);
         LALexer lexer = new LALexer(input);
@@ -49,9 +52,7 @@ public class T1CC2 {
             try (PrintWriter pw = new PrintWriter(new FileOutputStream(args[1]))) {
                 pw.print(out);
                 pw.println("Fim da compilacao");
-            }
-
-        }
-
+            }*/
+        
     }
 }

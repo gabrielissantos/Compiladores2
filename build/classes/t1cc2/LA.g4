@@ -1,25 +1,7 @@
 grammar LA;
 
-IDENT : ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '0'..'9' | '_')*
-      ;
-
-NUM_INT : ('0' .. '9')+
-        ;
-
-NUM_REAL : ('0' .. '9')+ '.' ('0' .. '9')*
-         ;
-
-CADEIA	: '\'' ~('\n' | '\r' | '\'')* '\'' | '"' ~('\n' | '\r' | '"')* '"'
-        ;
-
-ERROCHAR: .
-        ;
-
-COMMENTNFECHADO: '{' .*? 
-               ;
-
 programa : declaracoes 'algoritmo' corpo 'fim_algoritmo'
-         ;
+         EOF;
 
 declaracoes : (decl_local_global)*
             ;
@@ -33,7 +15,7 @@ declaracao_local : 'declare' variavel
                  | 'tipo' IDENT ':' tipo
                  ;
 
-variavel : identificador (',' identificador)* ',' tipo
+variavel : identificador (',' identificador)* ':' tipo
          ;
 
 identificador : IDENT ('.' IDENT)* dimensao
@@ -197,3 +179,25 @@ op_logico_1 : 'ou'
 op_logico_2 : 'e'
             ;
 
+WS : (' ' | '\t' | '\r' | '\n') {skip();};
+
+IDENT : ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '0'..'9' | '_')*
+      ;
+
+NUM_INT : ('0' .. '9')+
+        ;
+
+NUM_REAL : ('0' .. '9')+ '.' ('0' .. '9')+
+         ;
+
+CADEIA	: '\'' ~('\n' | '\r' | '\'')* '\'' | '"' ~('\n' | '\r' | '"')* '"'
+        ;
+
+
+COMMENT: '{' ~('\n')* '}' {skip();}  
+               ;
+
+COMMENTNFECHADO:  '{' ~('\n' | '}' )* '\n' 
+               ;
+
+ERROCHAR: .;
