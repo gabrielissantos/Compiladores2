@@ -1,9 +1,9 @@
-// Generated from Luazinha.g4 by ANTLR 4.7.2
+// Generated from C:\T1\Compiladores2\src\t1cc2\LA.g4 by ANTLR 4.7.2
 package t1cc2;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
- * This class provides an empty implementation of {@link LuazinhaVisitor},
+ * This class provides an empty implementation of {@link LAVisitor},
  * which can be extended to create a visitor which only needs to handle a subset
  * of the available methods.
  *
@@ -31,7 +31,7 @@ public class LABaseVisitor<T> extends AbstractParseTreeVisitor<T> implements LAV
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitDecl_local_global(LAParser.Decl_local_globalContext ctx) { return visitChildren(ctx); }
+	@Override public T visitDecl_local_global(LAParser.Decl_local_globalContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -269,97 +269,96 @@ public class LABaseVisitor<T> extends AbstractParseTreeVisitor<T> implements LAV
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitOp1(LAParser.Op1Context ctx) { return visitChildren(ctx); } 
-        /**
+	@Override public T visitOp1(LAParser.Op1Context ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitOp2(LAParser.Op2Context ctx) { return visitChildren(ctx); } 
-        /**
+	@Override public T visitOp2(LAParser.Op2Context ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitOp3(LAParser.Op3Context ctx) { return visitChildren(ctx); } 
-        /**
+	@Override public T visitOp3(LAParser.Op3Context ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitParcela(LAParser.ParcelaContext ctx) { return visitChildren(ctx); }
-        /**
+	@Override public T visitParcela(LAParser.ParcelaContext ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitParcela_unario(LAParser.Parcela_unarioContext ctx) { return visitChildren(ctx); } 
-        /**
+	@Override public T visitParcela_unario(LAParser.Parcela_unarioContext ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitParcela_nao_unario(LAParser.Parcela_nao_unarioContext ctx) { return visitChildren(ctx); }
-        /**
+	@Override public T visitParcela_nao_unario(LAParser.Parcela_nao_unarioContext ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitExp_relacional(LAParser.Exp_relacionalContext ctx) { return visitChildren(ctx); }
-        /**
+	@Override public T visitExp_relacional(LAParser.Exp_relacionalContext ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitOp_relacional(LAParser.Op_relacionalContext ctx) { return visitChildren(ctx); }
-        /**
+	@Override public T visitOp_relacional(LAParser.Op_relacionalContext ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitExpressao(LAParser.ExpressaoContext ctx) { return visitChildren(ctx); }
-        /**
+	@Override public T visitExpressao(LAParser.ExpressaoContext ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitTermo_logico(LAParser.Termo_logicoContext ctx) { return visitChildren(ctx); }
-        /**
+	@Override public T visitTermo_logico(LAParser.Termo_logicoContext ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitFator_logico(LAParser.Fator_logicoContext ctx) { return visitChildren(ctx); }
-        /**
+	@Override public T visitFator_logico(LAParser.Fator_logicoContext ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitParcela_logica(LAParser.Parcela_logicaContext ctx) { return visitChildren(ctx); }
-        /**
+	@Override public T visitParcela_logica(LAParser.Parcela_logicaContext ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitOp_logico_1(LAParser.Op_logico_1Context ctx) { return visitChildren(ctx); }
-        /**
+	@Override public T visitOp_logico_1(LAParser.Op_logico_1Context ctx) { return visitChildren(ctx); }
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-        @Override public T visitOp_logico_2(LAParser.Op_logico_2Context ctx) { return visitChildren(ctx); }
-        
+	@Override public T visitOp_logico_2(LAParser.Op_logico_2Context ctx) { return visitChildren(ctx); }
 }

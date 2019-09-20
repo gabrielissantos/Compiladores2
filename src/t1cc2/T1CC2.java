@@ -27,32 +27,33 @@ public class T1CC2 {
 
     public static void main(String[] args) throws IOException, RecognitionException {
         SaidaParser out = new SaidaParser();
-        CharStream input = CharStreams.fromFileName(args[0]); //entrada
+        LAParser.ProgramaContext arvore = null; //para a analise semantica
+        try{
+            CharStream input = CharStreams.fromFileName(args[0]); //entrada
+            LALexer lexer = new LALexer(input);
+            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+            LAParser parser = new LAParser(tokenStream);
+            parser.addErrorListener(new ErrorListener(out));
+            arvore = parser.programa();
+        }
+        catch(ArrayIndexOutOfBoundsException aiobe){
+            System.out.println("Erro: nenhum arquivo de entrada foi dado ao executar o compilador.");
+        }
+        
+        //analise semantica
+        if(!out.isModificado()){
+            LASemanticAnalyzer semantico = new LASemanticAnalyzer(out);
+            semantico.visitPrograma(arvore);
+        }
+        
+        
         File saida = new File(args[1]);
-        PrintWriter pw = new PrintWriter(new FileOutputStream(saida));
-        LALexer lexer = new LALexer(input);
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        LAParser parser = new LAParser(tokenStream);
-        parser.addErrorListener(new ErrorListener(out));
-        parser.programa();
-        out.println("Fim da compilacao");
-        pw.print(out.toString());
-        pw.flush();
-        pw.close();
-        /*
-        SaidaParser out = new SaidaParser();
-        CharStream input = CharStreams.fromFileName(args[0]);
-        LALexer lexer = new LALexer(input);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        LAParser parser = new LAParser(tokens);
-        parser.addErrorListener(new ErrorListener(out));
-        parser.programa();
-        if (!out.isModificado()) {
-            out.println("Fim da analise. Sem erros sintaticos.");
-            try (PrintWriter pw = new PrintWriter(new FileOutputStream(args[1]))) {
-                pw.print(out);
-                pw.println("Fim da compilacao");
-            }*/
+        try (PrintWriter pw = new PrintWriter(new FileOutputStream(saida))) {
+            out.println("Fim da compilacao");
+            pw.print(out.toString());
+            pw.flush();
+        }
+        
         
     }
 }
