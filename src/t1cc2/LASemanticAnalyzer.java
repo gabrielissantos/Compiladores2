@@ -5,6 +5,8 @@
  */
 package t1cc2;
 
+import java.util.List;
+
 /**
  *
  * @author daniellucredio
@@ -48,12 +50,12 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
     /*ERROS ENCONTRADOS 
     * 01. OK tipo não declarado e identificador nao declarado
     * 02. OK identificador não declarado
-    * 03. identificador ja declarado e identificador ja declarado   
-    * 04. atribuicao nao compativel, fim da compilacao
+    * 03. OK identificador ja declarado e identificador ja declarado   
+    * 04. OK atribuicao nao compativel, fim da compilacao
     * 05. OK identificador ja declarado, fim da compilacao
-    * 06. atribuicao nao compativel, identificador nao declarado, fim da compilacao
-    * 07. atribuicao nao compativel, fim da compilacao
-    * 08. tipo nao declarado, atribuicao nao compativel e fim da compilacao
+    * 06. OK atribuicao nao compativel, identificador nao declarado, fim da compilacao
+    * 07. OK atribuicao nao compativel, fim da compilacao
+    * 08. OK tipo nao declarado, atribuicao nao compativel e fim da compilacao
     * 09. atribuicao nao compativel, identificador nao declarado, fim da compilacao
     * 10. atribuicao nao compativel e fim da compilacao
     * 11. atribuicao nao compativel e fim da compilacao
@@ -83,9 +85,9 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
         String tipo = ctx.variavel().tipo().getText();
         for (int i = 0; i < tam; i++) {
             String identificador = ctx.variavel().identificador().get(i).IDENT(0).getText();
-            System.out.println(identificador + ": " + tipo);
+            //System.out.println(identificador + ": " + tipo);
             if (pilhaDeTabelas.existeSimbolo(identificador)) {
-                out.println("Linha " + ctx.variavel().getStart().getLine() + ": identificador " + identificador + " ja declarado anteriormente");
+                out.println("Linha " + ctx.variavel().identificador(i).getStart().getLine() + ": identificador " + identificador + " ja declarado anteriormente");
 
             } else {
                 //pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
@@ -121,27 +123,56 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
     //Se eh atribuido um valor a uma variavel nao declarada
     @Override
     public Void visitCmdAtribuicao(LAParser.CmdAtribuicaoContext ctx) {
-        String nomeVar = ctx.identificador().IDENT(0).getText();
-        if (!pilhaDeTabelas.existeSimbolo(nomeVar)){
-            out.println("Linha " + ctx.start.getLine() + ": identificador " + nomeVar + " nao declarado");
+        String textoidentificador = ctx.identificador().IDENT(0).getText();
+        if (!pilhaDeTabelas.existeSimbolo(textoidentificador)) {
+            out.println("Linha " + ctx.start.getLine() + ": identificador " + textoidentificador + " nao declarado");
             return null;
-        }
-        else{
-            String tipo = pilhaDeTabelas.topo().getTipo(nomeVar);
-            System.out.println("CONSEGUI PEGAR O TIPO E EH: " + tipo);
-            
-            System.out.println("Expressao: " + ctx.expressao().getText());
-            
-            
+        } else {
+
+            //pegando o tipo do identificador
+            String tipoidentificador = pilhaDeTabelas.topo().getTipo(textoidentificador);
+            //System.out.println("o tipo do identificador eh: " + tipoidentificador);
+
+            //pegando o tamanho do termo pra saber em quantas vezes ele esta dividido
+            int termo = 1; //caso a expressao nao seja uma expressao aritmetica
+            String textoexpressao = ctx.expressao().getText(); //pegando texto da expressao completa
+            if (textoexpressao.contains("+")) {
+                termo = ctx.expressao().termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().size();
             }
-        
-        
-        /*if (!pilhaDeTabelas.existeSimbolo(nomeVar)) {
-            out.println("Identificador nao declarado: " + nomeVar);
-        }*/
+
+            //System.out.println("O tamanho do termo eh: " + termo);
+            for (int i = 0; i < termo; i++) {
+                String textotermo;
+                String tipotermo;
+                int linha; //para a funcao getLine()
+                //pegando cada parte do termo da expressao
+                if (termo != 1) { //se for uma expressao com mais de um termo
+                    textotermo = ctx.expressao().termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().get(i).getText();
+                    linha = ctx.expressao().termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().get(i).getStart().getLine();
+                } else { //expressao com um unico termo
+                    textotermo = ctx.expressao().getText(); 
+                    linha = ctx.expressao().getStart().getLine();
+                }
+                //identificando o tipo de cada termo
+                tipotermo = pilhaDeTabelas.topo().getTipo(textotermo);
+                if (tipotermo != tipoidentificador) {
+                    //se o tipo do identificador for literal
+                    if (tipoidentificador.equals("literal")) {
+                        //se o texto nao estiver entre " "
+                        if (!textotermo.contains("\"")) {
+                            out.println("Linha " + linha + ": atribuicao nao compativel para " + textoidentificador);
+                        }
+                    } else if (tipoidentificador.equals("logico")) {
+                        if (textotermo.contains("\"")) {
+                            out.println("Linha " + linha + ": atribuicao nao compativel para " + textoidentificador);
+                        }
+                    }
+                }
+            }
+        }
         return null;
     }
-    
+
     //se ocorre uma tentativa de ler uma variavel nao declarada
     @Override
     public Void visitCmdLeia(LAParser.CmdLeiaContext ctx) {
@@ -154,46 +185,32 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
         return null;
     }
 
-    /*@Override
+    @Override
     public Void visitCmdEscreva(LAParser.CmdEscrevaContext ctx) {
-        int tam = ctx.expressao().size();
+        int tam = ctx.expressao().size(); //tamanho da expressao
         System.out.println("o tam da expressao eh: " + tam);
-        String nomeVar = ctx.expressao().get(--tam).getText();
+        String nomeVar = ctx.expressao().get(--tam).termo_logico(0).getText(); //nome do ultimo item da lista de expressoes
         System.out.println(nomeVar);
-        
-        pilhaDeTabelas.topo().
-        
-        nomeVar.contains(pilhaDeTabelas.existeSimbolo(nomeVar));
-        
-        if (!pilhaDeTabelas.existeSimbolo(nomeVar)) {
-            int linha = ctx.start.getLine() + 1;
-            
-            out.println("Linha " + linha + ": identificador " + nomeVar + " nao declarado");
-            
-        }
 
-        return null;
-    }*/
+        //quantidade de termos da expressao
+        int termo = ctx.expressao().get(tam).termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().size();
+        System.out.println("O tamanho do parcela eh: " + termo);
 
-    /*@Override
-    public Void visitIdentificador(LAParser.IdentificadorContext ctx) {
-        // identificador : IDENT ('.'  IDENT)* dimensao; 
-        String nome = ctx.IDENT().get(0).getText();
-        for (int i = 1; i < ctx.IDENT().size(); i++) {
-            nome += "." + ctx.IDENT().get(i).getText();
-        }
-        if (!pilhaDeTabelas.topo().existeSimbolo(nome)) {
-            out.println("Linha " + ctx.start.getLine() + ": identificador " + nome + " nao declarado");
+        //o laço percorre cada termo da expressao
+        for (int i = 0; i < termo; i++) {
+            //pega o texto contido no termo
+            String textotermo = ctx.expressao().get(tam).termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().get(i).getText();
+            System.out.println("texto do termo: " + textotermo);
+
+            //se o termo nao estiver contido em aspas
+            if (!textotermo.contains("\"")) {
+                //se o termo nao estiver na tabela de simbolos
+                if (!pilhaDeTabelas.existeSimbolo(textotermo)) {
+                    out.println("Linha " + ctx.expressao().get(1).termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().get(i).getStart().getLine() + ": identificador " + textotermo + " nao declarado");
+                }
+            }
+
         }
         return null;
     }
-    //metodos auxiliares
-    private String pegarTipo(LAParser.TipoContext tipo) {
-        if (tipo.registro() != null) {
-            return tipo.registro().getText();
-        } else if (tipo.tipo_estendido() != null) {
-            return tipo.tipo_estendido().tipo_basico_ident().tipo_basico().getText();
-        }
-        return "";
-    }*/
 }
