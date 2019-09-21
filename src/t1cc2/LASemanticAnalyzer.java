@@ -7,13 +7,8 @@ package t1cc2;
 
 import java.util.List;
 
-/**
- *
- * @author daniellucredio
- */
 public class LASemanticAnalyzer extends LABaseVisitor<Void> {
 
-    // Não esqueça de colocar os RAs do seu grupo na variável a seguir    
     public static String grupo = "<726588, 726523>";
 
     PilhaDeTabelas pilhaDeTabelas = new PilhaDeTabelas();
@@ -67,7 +62,6 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
     * 17. identificador ja declarado e fim da compilacao
     * 18. OK identificador ja declarado e fim da compilacao
      */
- 
     @Override
     public Void visitDeclaracao_local(LAParser.Declaracao_localContext ctx) {
         //  declaracao_local : 'declare' variavel
@@ -87,6 +81,7 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
                     if (ctx.variavel().tipo().registro() != null) {
                         //System.out.println("Ola, rsrs");
                         //tipo = ctx.variavel().tipo().registro().getText();
+
                         pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
 
                     } else if (ctx.variavel().tipo().tipo_estendido() != null) {
@@ -109,13 +104,23 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
                 }
             }
         }
-        //  declaracao_local : 'constante' IDENT ':' tipo_basico '=' valor_constante
-        if (ctx.valor_constante() != null){
-            if(!pilhaDeTabelas.existeSimbolo(ctx.IDENT().getText())){
-                pilhaDeTabelas.topo().adicionarSimbolo(ctx.IDENT().getText(), ctx.tipo_basico().getText());
+
+        if (ctx.valor_constante() != null) { //  declaracao_local : 'constante' IDENT ':' tipo_basico '=' valor_constante
+            if (!pilhaDeTabelas.existeSimbolo(ctx.IDENT().getText())) { //se a constante nao existir na tabela
+                pilhaDeTabelas.topo().adicionarSimbolo(ctx.IDENT().getText(), ctx.tipo_basico().getText()); //adiciona a constante na tabela
             }
         }
-        System.out.println("ta acontecendo algo estranho");
+
+        if (ctx.tipo() != null) {
+            System.out.println("tem registro no codigo " + ctx.IDENT().getText());
+            if (!pilhaDeTabelas.topo().existeSimbolo(ctx.IDENT().getText())) {
+                pilhaDeTabelas.topo().adicionarSimbolo(ctx.IDENT().getText(), ctx.tipo().getText());
+                //System.out.println("Pilha de tabelas: " + pilhaDeTabelas.getTodasTabelas());
+                System.out.println(ctx.IDENT().getText());
+                System.out.println(ctx.tipo().getText());
+            }
+
+        }
         return null;
     }
 
@@ -174,7 +179,8 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
 
     //se ocorre uma tentativa de ler uma variavel nao declarada
     @Override
-    public Void visitCmdLeia(LAParser.CmdLeiaContext ctx) {
+    public Void visitCmdLeia(LAParser.CmdLeiaContext ctx
+    ) {
         int tam = ctx.identificador().size();
         String nomeVar = ctx.identificador().get(--tam).getText();
         if (!pilhaDeTabelas.existeSimbolo(nomeVar)) {
@@ -185,21 +191,22 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
     }
 
     @Override
-    public Void visitCmdEscreva(LAParser.CmdEscrevaContext ctx) {
+    public Void visitCmdEscreva(LAParser.CmdEscrevaContext ctx
+    ) {
         int tam = ctx.expressao().size(); //tamanho da expressao
-        System.out.println("o tam do termo logico eh: " + tam);
+        //System.out.println("o tam do termo logico eh: " + tam);
         String nomeVar = ctx.expressao().get(--tam).termo_logico(0).getText(); //nome do ultimo item da lista de expressoes
-        System.out.println(nomeVar);
+        //System.out.println(nomeVar);
 
         //quantidade de termos da expressao
         int termo = ctx.expressao().get(tam).termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().size();
-        System.out.println("O tamanho do termo eh: " + termo);
+        //System.out.println("O tamanho do termo eh: " + termo);
 
         //o laço percorre cada termo da expressao
         for (int i = 0; i < termo; i++) {
             //pega o texto contido no termo
             String textotermo = ctx.expressao().get(tam).termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().get(i).getText();
-            System.out.println("texto do termo: " + textotermo);
+            //System.out.println("texto do termo: " + textotermo);
 
             //se o termo nao estiver contido em aspas
             if (!textotermo.contains("\"")) {
