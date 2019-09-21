@@ -52,14 +52,14 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
     * 07. OK atribuicao nao compativel, fim da compilacao
     * 08. OK tipo nao declarado, atribuicao nao compativel e fim da compilacao
     * 09. atribuicao nao compativel, identificador nao declarado, fim da compilacao
-    * 10. atribuicao nao compativel e fim da compilacao
+    * 10. OK atribuicao nao compativel e fim da compilacao
     * 11. atribuicao nao compativel e fim da compilacao
     * 12. identificador ja declarado, identificador nao declarado e fim da compilacao 
     * 13. incompatibilidade de parametros na chamada e fim da compilacao
     * 14. atribuicao nao compativel, identificador nao declarado e dim da compilacao 
     * 15. comando retorne nao permitido nesse escopo e fim da compilacao
     * 16. comando retorne nao permitido nesse escopo e fim da compilacao
-    * 17. identificador ja declarado e fim da compilacao
+    * 17. identificador ja declarado e fim da compilacao //declaracao de registro e procedimento
     * 18. OK identificador ja declarado e fim da compilacao
      */
     @Override
@@ -67,8 +67,9 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
         //  declaracao_local : 'declare' variavel
         if (ctx.variavel() != null) {
             int tam = ctx.variavel().identificador().size();
-            System.out.println("EH VARIAVEL");
+            //System.out.println("EH VARIAVEL");
             String tipo = ctx.variavel().tipo().getText();
+            System.out.println("o tipo eh: " + tipo);
             for (int i = 0; i < tam; i++) {
                 String identificador = ctx.variavel().identificador().get(i).IDENT(0).getText();
                 //System.out.println(identificador + ": " + tipo);
@@ -88,17 +89,15 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
                         //tipo = ctx.variavel().tipo().tipo_estendido().tipo_basico_ident().tipo_basico().getText();
                         //System.out.println("tipo: " + tipo);
                         if (tipo.equalsIgnoreCase("literal") || tipo.equalsIgnoreCase("inteiro") || tipo.equalsIgnoreCase("real") || tipo.equalsIgnoreCase("logico")) {
-                            //tipo = ctx.variavel().tipo().tipo_estendido().tipo_basico_ident().tipo_basico().getText();
-                            //System.out.println("ADICIONANDO NA TABELA...");
                             pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
-                            //System.out.println("Pilha de tabelas: " + pilhaDeTabelas.getTodasTabelas());
-                            //System.out.println("Passei por aqui " + i + " vezes");
 
-                        } else {
-                            //System.out.println("tipo " + tipo + " nao declarado");
-                            //GETLINE TA PEGANDO A LINHA ERRADA
+                        }
+                        else if (tipo.equalsIgnoreCase("^literal") || tipo.equalsIgnoreCase("^inteiro") || tipo.equalsIgnoreCase("^real") || tipo.equalsIgnoreCase("^logico")){
+                            pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
+                            System.out.println(pilhaDeTabelas.getTodasTabelas());
+                        }
+                        else {
                             out.println("Linha " + ctx.variavel().getStart().getLine() + ": tipo " + tipo + " nao declarado");
-
                         }
                     }
                 }
@@ -170,7 +169,12 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
                         if (textotermo.contains("\"")) {
                             out.println("Linha " + linha + ": atribuicao nao compativel para " + textoidentificador);
                         }
+                    } else if (tipoidentificador.equals("^inteiro")){ //ponteiro do tipo inteiro
+                        if (textotermo.contains("\"")){
+                            out.println("Linha " + linha + ": atribuicao nao compativel para ^" + textoidentificador);
+                        }
                     }
+                    
                 }
             }
         }
