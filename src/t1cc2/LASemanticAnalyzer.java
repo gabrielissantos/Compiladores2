@@ -65,58 +65,57 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
     * 15. comando retorne nao permitido nesse escopo e fim da compilacao
     * 16. comando retorne nao permitido nesse escopo e fim da compilacao
     * 17. identificador ja declarado e fim da compilacao
-    * 18. identificador ja declarado e fim da compilacao
+    * 18. OK identificador ja declarado e fim da compilacao
      */
- /*@Override
-    public Void visitDeclaracao_local(LAParser.Declaracao_localContext ctx) {
-        if (ctx.variavel() != null) {
-            String tipo = pegarTipo(ctx.variavel().tipo());
-            ctx.variavel().identificador().forEach((id) -> {
-                pilhaDeTabelas.topo().adicionarSimbolo(id.IDENT(0).getText(), tipo);
-            });
-        }
-
-        return super.visitDeclaracao_local(ctx); //To change body of generated methods, choose Tools | Templates.
-    }*/
+ 
     @Override
     public Void visitDeclaracao_local(LAParser.Declaracao_localContext ctx) {
-        int tam = ctx.variavel().identificador().size();
-        //System.out.println("tam: " + tam);
-        String tipo = ctx.variavel().tipo().getText();
-        for (int i = 0; i < tam; i++) {
-            String identificador = ctx.variavel().identificador().get(i).IDENT(0).getText();
-            //System.out.println(identificador + ": " + tipo);
-            if (pilhaDeTabelas.existeSimbolo(identificador)) {
-                out.println("Linha " + ctx.variavel().identificador(i).getStart().getLine() + ": identificador " + identificador + " ja declarado anteriormente");
+        //  declaracao_local : 'declare' variavel
+        if (ctx.variavel() != null) {
+            int tam = ctx.variavel().identificador().size();
+            System.out.println("EH VARIAVEL");
+            String tipo = ctx.variavel().tipo().getText();
+            for (int i = 0; i < tam; i++) {
+                String identificador = ctx.variavel().identificador().get(i).IDENT(0).getText();
+                //System.out.println(identificador + ": " + tipo);
+                if (pilhaDeTabelas.existeSimbolo(identificador)) {
+                    out.println("Linha " + ctx.variavel().identificador(i).getStart().getLine() + ": identificador " + identificador + " ja declarado anteriormente");
 
-            } else {
-                //pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
-                //System.out.println("Ola, entrei aqui");
-                if (ctx.variavel().tipo().registro() != null) {
-                    //System.out.println("Ola, rsrs");
-                    //tipo = ctx.variavel().tipo().registro().getText();
-                    pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
-
-                } else if (ctx.variavel().tipo().tipo_estendido() != null) {
-                    //tipo = ctx.variavel().tipo().tipo_estendido().tipo_basico_ident().tipo_basico().getText();
-                    //System.out.println("tipo: " + tipo);
-                    if (tipo.equalsIgnoreCase("literal") || tipo.equalsIgnoreCase("inteiro") || tipo.equalsIgnoreCase("real") || tipo.equalsIgnoreCase("logico")) {
-                        //tipo = ctx.variavel().tipo().tipo_estendido().tipo_basico_ident().tipo_basico().getText();
-                        //System.out.println("ADICIONANDO NA TABELA...");
+                } else {
+                    //pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
+                    //System.out.println("Ola, entrei aqui");
+                    if (ctx.variavel().tipo().registro() != null) {
+                        //System.out.println("Ola, rsrs");
+                        //tipo = ctx.variavel().tipo().registro().getText();
                         pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
-                        //System.out.println("Pilha de tabelas: " + pilhaDeTabelas.getTodasTabelas());
-                        //System.out.println("Passei por aqui " + i + " vezes");
 
-                    } else {
-                        //System.out.println("tipo " + tipo + " nao declarado");
-                        //GETLINE TA PEGANDO A LINHA ERRADA
-                        out.println("Linha " + ctx.variavel().getStart().getLine() + ": tipo " + tipo + " nao declarado");
+                    } else if (ctx.variavel().tipo().tipo_estendido() != null) {
+                        //tipo = ctx.variavel().tipo().tipo_estendido().tipo_basico_ident().tipo_basico().getText();
+                        //System.out.println("tipo: " + tipo);
+                        if (tipo.equalsIgnoreCase("literal") || tipo.equalsIgnoreCase("inteiro") || tipo.equalsIgnoreCase("real") || tipo.equalsIgnoreCase("logico")) {
+                            //tipo = ctx.variavel().tipo().tipo_estendido().tipo_basico_ident().tipo_basico().getText();
+                            //System.out.println("ADICIONANDO NA TABELA...");
+                            pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
+                            //System.out.println("Pilha de tabelas: " + pilhaDeTabelas.getTodasTabelas());
+                            //System.out.println("Passei por aqui " + i + " vezes");
 
+                        } else {
+                            //System.out.println("tipo " + tipo + " nao declarado");
+                            //GETLINE TA PEGANDO A LINHA ERRADA
+                            out.println("Linha " + ctx.variavel().getStart().getLine() + ": tipo " + tipo + " nao declarado");
+
+                        }
                     }
                 }
             }
         }
-
+        //  declaracao_local : 'constante' IDENT ':' tipo_basico '=' valor_constante
+        if (ctx.valor_constante() != null){
+            if(!pilhaDeTabelas.existeSimbolo(ctx.IDENT().getText())){
+                pilhaDeTabelas.topo().adicionarSimbolo(ctx.IDENT().getText(), ctx.tipo_basico().getText());
+            }
+        }
+        System.out.println("ta acontecendo algo estranho");
         return null;
     }
 
@@ -150,7 +149,7 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
                     textotermo = ctx.expressao().termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().get(i).getText();
                     linha = ctx.expressao().termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().get(i).getStart().getLine();
                 } else { //expressao com um unico termo
-                    textotermo = ctx.expressao().getText(); 
+                    textotermo = ctx.expressao().getText();
                     linha = ctx.expressao().getStart().getLine();
                 }
                 //identificando o tipo de cada termo
@@ -188,13 +187,13 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
     @Override
     public Void visitCmdEscreva(LAParser.CmdEscrevaContext ctx) {
         int tam = ctx.expressao().size(); //tamanho da expressao
-        System.out.println("o tam da expressao eh: " + tam);
+        System.out.println("o tam do termo logico eh: " + tam);
         String nomeVar = ctx.expressao().get(--tam).termo_logico(0).getText(); //nome do ultimo item da lista de expressoes
         System.out.println(nomeVar);
 
         //quantidade de termos da expressao
         int termo = ctx.expressao().get(tam).termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().size();
-        System.out.println("O tamanho do parcela eh: " + termo);
+        System.out.println("O tamanho do termo eh: " + termo);
 
         //o laço percorre cada termo da expressao
         for (int i = 0; i < termo; i++) {
