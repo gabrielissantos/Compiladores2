@@ -6,6 +6,7 @@ import java.util.List;
 public class PilhaDeTabelas {
 
     private LinkedList<TabelaDeSimbolos> pilha;
+    private List<EntradaTabelaDeSimbolos> simbolos;
 
     public PilhaDeTabelas() {
         pilha = new LinkedList<TabelaDeSimbolos>();

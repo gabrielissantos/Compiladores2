@@ -3,10 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Gabrieli%20Santos/Desktop/materias/1.%20Compiladores%202/T1/Compiladores2/src/t1cc2/ErrorListener.java</file>
-            <file>file:/C:/Users/Gabrieli%20Santos/Desktop/materias/1.%20Compiladores%202/T1/Compiladores2/src/t1cc2/TabelaDeSimbolos.java</file>
-            <file>file:/C:/Users/Gabrieli%20Santos/Desktop/materias/1.%20Compiladores%202/T1/Compiladores2/src/t1cc2/LA.g4</file>
-            <file>file:/C:/Users/Gabrieli%20Santos/Desktop/materias/1.%20Compiladores%202/T1/Compiladores2/src/t1cc2/T1CC2.java</file>
+            <file>file:/C:/T1/Compiladores2/src/t1cc2/LA.g4</file>
+            <file>file:/C:/T1/Compiladores2/src/t1cc2/LAParser.java</file>
+            <file>file:/C:/T1/Compiladores2/src/t1cc2/TabelaDeSimbolos.java</file>
+            <file>file:/C:/T1/Compiladores2/src/t1cc2/LASemanticAnalyzer.java</file>
+            <file>file:/C:/T1/Compiladores2/src/t1cc2/LAEnums.java</file>
+            <file>file:/C:/T1/Compiladores2/src/t1cc2/T1CC2.java</file>
+            <file>file:/C:/T1/Compiladores2/src/t1cc2/PilhaDeTabelas.java</file>
         </group>
     </open-files>
 </project-private>

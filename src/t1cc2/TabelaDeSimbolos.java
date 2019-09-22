@@ -1,11 +1,13 @@
 package t1cc2;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class TabelaDeSimbolos {
     private String escopo;
     private List<EntradaTabelaDeSimbolos> simbolos;
+    private LinkedList<TabelaDeSimbolos> pilha;
     
     public TabelaDeSimbolos(String escopo) {
         simbolos = new ArrayList<EntradaTabelaDeSimbolos>();
@@ -22,6 +24,15 @@ public class TabelaDeSimbolos {
         }
     }
     
+    public String getTipo (String nome){
+        for(EntradaTabelaDeSimbolos etds:simbolos) {
+            if(etds.getNome().equals(nome)) {
+                return etds.getTipo();
+            }
+        }
+        return "null";
+    }
+    
     public boolean existeSimbolo(String nome) {
         for(EntradaTabelaDeSimbolos etds:simbolos) {
             if(etds.getNome().equals(nome)) {
@@ -29,15 +40,6 @@ public class TabelaDeSimbolos {
             }
         }
         return false;
-    }
-	
-	public String getTipo (String nome){
-        for(EntradaTabelaDeSimbolos etds:simbolos) {
-            if(etds.getNome().equals(nome)) {
-                return etds.getTipo();
-            }
-        }
-        return "null";
     }
     
     @Override
@@ -47,5 +49,12 @@ public class TabelaDeSimbolos {
             ret += "\n   "+etds;
         }
         return ret;
+    }
+    
+    public LAEnums.TipoDeDado getTipoDeDado(String nome){
+        for (TabelaDeSimbolos ts : pilha) {
+            if(ts.getTipoDeDado(nome) != null) return ts.getTipoDeDado(nome);
+        }
+        return null;
     }
 }
