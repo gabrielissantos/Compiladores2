@@ -81,13 +81,13 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
                             pilhaDeTabelas.topo().adicionarSimbolo(nomeregistro, ctx.variavel().tipo().registro().variavel().get(0).tipo().getText());
                         }
                         
-                        System.out.println(pilhaDeTabelas.getTodasTabelas());
+                        //System.out.println(pilhaDeTabelas.getTodasTabelas());
                     } else if (ctx.variavel().tipo().tipo_estendido() != null) {
                         if (tipo.equalsIgnoreCase("literal") || tipo.equalsIgnoreCase("inteiro") || tipo.equalsIgnoreCase("real") || tipo.equalsIgnoreCase("logico")) {
                             pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
                         } else if (tipo.equalsIgnoreCase("^literal") || tipo.equalsIgnoreCase("^inteiro") || tipo.equalsIgnoreCase("^real") || tipo.equalsIgnoreCase("^logico")) {
                             pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
-                            System.out.println(pilhaDeTabelas.getTodasTabelas());
+                            //System.out.println(pilhaDeTabelas.getTodasTabelas());
                         } else {
                             out.println("Linha " + ctx.variavel().getStart().getLine() + ": tipo " + tipo + " nao declarado");
                         }
@@ -116,12 +116,12 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
     @Override
     public Void visitCmdAtribuicao(LAParser.CmdAtribuicaoContext ctx) {
         String textoidentificador = ctx.identificador().getText();
-        System.out.println(textoidentificador);
+        //System.out.println(textoidentificador);
         if (!pilhaDeTabelas.existeSimbolo(textoidentificador)) {
             out.println("Linha " + ctx.start.getLine() + ": identificador " + textoidentificador + " nao declarado");
             return null;
         } else {
-
+            //visitChildren(ctx.getchildren()); visitExpressao
             //pegando o tipo do identificador
             String tipoidentificador = pilhaDeTabelas.topo().getTipo(textoidentificador);
 
@@ -212,6 +212,22 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
             }
 
         }
+        return null;
+    }
+    
+    @Override
+    public Void visitCmdRetorne(LAParser.CmdRetorneContext ctx){      
+        System.out.println("eu to entrando aqui");
+        
+        System.out.println("oi: "+ctx.getText());
+        //visitCmdEnquanto(ctx.getText());
+        
+        return null;
+    }
+    
+    @Override
+    public Void visitCmdEnquanto(LAParser.CmdEnquantoContext ctx){
+        //if (ctx.getText())
         return null;
     }
 }

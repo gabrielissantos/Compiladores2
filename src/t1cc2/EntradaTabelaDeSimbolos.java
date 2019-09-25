@@ -2,6 +2,8 @@ package t1cc2;
 
 public class EntradaTabelaDeSimbolos {
     private String nome, tipo;
+    private int tipoEntrada; // 1=var, 2=registro, 
+    private TabelaDeSimbolos subTabela;
     
     public EntradaTabelaDeSimbolos(String nome, String tipo) {
         this.nome = nome;

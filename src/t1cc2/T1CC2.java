@@ -24,36 +24,43 @@ public class T1CC2 {
      * @param args the command line arguments
      * @throws java.io.IOException
      */
-
     public static void main(String[] args) throws IOException, RecognitionException {
         SaidaParser out = new SaidaParser();
         LAParser.ProgramaContext arvore = null; //para a analise semantica
-        try{
+        try {
             CharStream input = CharStreams.fromFileName(args[0]); //entrada
             LALexer lexer = new LALexer(input);
             CommonTokenStream tokenStream = new CommonTokenStream(lexer);
             LAParser parser = new LAParser(tokenStream);
             parser.addErrorListener(new ErrorListener(out));
             arvore = parser.programa();
-        }
-        catch(ArrayIndexOutOfBoundsException aiobe){
+        } catch (ArrayIndexOutOfBoundsException aiobe) {
             System.out.println("Erro: nenhum arquivo de entrada foi dado ao executar o compilador.");
         }
-        
+
         //analise semantica
-        if(!out.isModificado()){
+        if (!out.isModificado()) {
             LASemanticAnalyzer semantico = new LASemanticAnalyzer(out);
             semantico.visitPrograma(arvore);
+        } else {
+            out.println("Fim da compilacao");
+
         }
-        
-        
+
+        if (!out.isModificado()) {
+//            LACodeGenerator gerador = new LACodeGenerator(out);
+//            gerador.visitPrograma(arvore);
+        } else {
+            out.println("Fim da compilacao");
+
+        }
+
         File saida = new File(args[1]);
         try (PrintWriter pw = new PrintWriter(new FileOutputStream(saida))) {
-            out.println("Fim da compilacao");
+            //out.println("Fim da compilacao");
             pw.print(out.toString());
             pw.flush();
         }
-        
-        
+
     }
 }
