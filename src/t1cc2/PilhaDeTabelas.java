@@ -37,4 +37,24 @@ public class PilhaDeTabelas {
     public List getTodasTabelas() {
         return pilha;
     }
+
+    //new
+    public void adicionaSimboloTopo(EntradaTabelaDeSimbolos entrada) {
+        this.topo().adicionarSimbolo(entrada.getNome(), entrada.getTipo());
+    }
+
+    public void adicionaSimboloTopo(String nome, String tipo) {
+        this.topo().adicionarSimbolo(nome, tipo);
+    }
+
+    public String getSimboloTipo(String nome) {
+        for (TabelaDeSimbolos tabela : pilha) {
+            if (tabela.existeSimbolo(nome)) {
+                return tabela.getTipo(nome);
+            }
+        }
+        return "falso";
+    }
+;
+;
 }

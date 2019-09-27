@@ -1,4 +1,4 @@
-// Generated from C:\T1\Compiladores2\src\t1cc2\LA.g4 by ANTLR 4.7.2
+// Generated from /home/rodrigo/Graduacao/OitavoSemestre/Compila2/Compiladores2-gerador_codigo/src/t1cc2/LA.g4 by ANTLR 4.7.2
 package t1cc2;
 
 import org.antlr.v4.runtime.ParserRuleContext;

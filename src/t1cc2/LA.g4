@@ -15,7 +15,7 @@ declaracao_local : 'declare' variavel
                  | 'tipo' IDENT ':' tipo
                  ;
 
-variavel : identificador (',' identificador)* ':' tipo
+variavel : identificador1=identificador (',' outrosIdentificadores+=identificador)* ':' tipo
          ;
 
 identificador : IDENT ('.' IDENT)* dimensao
@@ -28,7 +28,7 @@ tipo : registro
      | tipo_estendido
      ;
 
-tipo_basico : 'literal' 
+tipo_basico : 'literal'
             | 'inteiro'
             | 'real'
             | 'logico'
@@ -42,8 +42,8 @@ tipo_estendido : ('^')? tipo_basico_ident
                ;
 
 valor_constante : CADEIA
-                | NUM_INT 
-                | NUM_REAL 
+                | NUM_INT
+                | NUM_REAL
                 | 'verdadeiro'
                 | 'falso'
                 ;
@@ -55,7 +55,7 @@ declaracao_global : 'procedimento' IDENT '(' (parametros)? ')' (declaracao_local
                   | 'funcao' IDENT '(' (parametros)? ')' ':' tipo_estendido (declaracao_local)* (cmd)* 'fim_funcao'
                   ;
 
-parametro : ('var')? identificador (',' identificador)* ':' tipo_estendido
+parametro : ('var')? identificador1=identificador (',' outrosIdentificadores+=identificador)* ':' tipo_estendido
           ;
 
 parametros : parametro (',' parametro)*
@@ -76,7 +76,7 @@ cmd : cmdLeia
     | cmdRetorne
     ;
 
-cmdLeia : 'leia' '(' ('^')* identificador (',' ('^')? identificador)* ')' 
+cmdLeia : 'leia' '(' '^' ? identificadores+=identificador (',' '^'? identificadores+=identificador)* ')'
         ;
 
 cmdEscreva : 'escreva' '(' expressao (',' expressao)* ')'
@@ -97,7 +97,7 @@ cmdEnquanto : 'enquanto' expressao 'faca' (cmd)* 'fim_enquanto'
 cmdFaca : 'faca' (cmd)* 'ate' expressao
         ;
 
-cmdAtribuicao : ('^')? identificador '<-' expressao 
+cmdAtribuicao : ('^')? identificador '<-' expressao
               ;
 
 cmdChamada : IDENT '(' expressao (',' expressao)* ')'
@@ -139,11 +139,11 @@ op2 : '*' | '/'
 op3 : '%'
     ;
 
-parcela : (op_unario)? parcela_unario 
+parcela : (op_unario)? parcela_unario
         | parcela_nao_unario
         ;
 
-parcela_unario : ('^')? identificador 
+parcela_unario : ('^')? identificador
                | IDENT '(' expressao (',' expressao)* ')'
                | NUM_INT
                | NUM_REAL
@@ -166,11 +166,11 @@ expressao : termo_logico (op_logico_1 termo_logico)*
 termo_logico : fator_logico (op_logico_2 fator_logico)*
              ;
 
-fator_logico : ('nao')? parcela_logica 
+fator_logico : ('nao')? parcela_logica
              ;
 
-parcela_logica : ( 'verdadeiro' | 'falso' ) 
-               | exp_relacional 
+parcela_logica : ( 'verdadeiro' | 'falso' )
+               | exp_relacional
                ;
 
 op_logico_1 : 'ou'
@@ -194,10 +194,10 @@ CADEIA	: '\'' ~('\n' | '\r' | '\'')* '\'' | '"' ~('\n' | '\r' | '"')* '"'
         ;
 
 
-COMMENT: '{' ~('\n')* '}' {skip();}  
+COMMENT: '{' ~('\n')* '}' {skip();}
                ;
 
-COMMENTNFECHADO:  '{' ~('\n' | '}' )* '\n' 
+COMMENTNFECHADO:  '{' ~('\n' | '}' )* '\n'
                ;
 
 ERROCHAR: .;

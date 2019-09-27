@@ -38,18 +38,17 @@ public class T1CC2 {
             System.out.println("Erro: nenhum arquivo de entrada foi dado ao executar o compilador.");
         }
 
-        //analise semantica
+//        //analise semantica
+//        if (!out.isModificado()) {
+//            LASemanticAnalyzer semantico = new LASemanticAnalyzer(out);
+//            semantico.visitPrograma(arvore);
+//        } else {
+//            out.println("Fim da compilacao");
+//
+//        }
         if (!out.isModificado()) {
-            LASemanticAnalyzer semantico = new LASemanticAnalyzer(out);
-            semantico.visitPrograma(arvore);
-        } else {
-            out.println("Fim da compilacao");
-
-        }
-
-        if (!out.isModificado()) {
-//            LACodeGenerator gerador = new LACodeGenerator(out);
-//            gerador.visitPrograma(arvore);
+            GeradorDeCodigo gerador = new GeradorDeCodigo(out);
+            gerador.visitPrograma(arvore);
         } else {
             out.println("Fim da compilacao");
 
