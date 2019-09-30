@@ -68,26 +68,22 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
         if (ctx.variavel() != null) {
             int tam = ctx.variavel().identificador().size();
             String tipo = ctx.variavel().tipo().getText();
-            //System.out.println("o tipo eh: " + tipo);
             for (int i = 0; i < tam; i++) {
                 String identificador = ctx.variavel().identificador().get(i).IDENT(0).getText();
-                if (pilhaDeTabelas.existeSimbolo(identificador)) {
+                if (pilhaDeTabelas.existeSimbolo(identificador)) { //se o identificador já está na pilha de tabelas
                     out.println("Linha " + ctx.variavel().identificador(i).getStart().getLine() + ": identificador " + identificador + " ja declarado anteriormente");
                 } else {
-                    if (ctx.variavel().tipo().registro() != null) {
+                    if (ctx.variavel().tipo().registro() != null) { //se o tipo for um registro
                         int tamIdentRegistro = ctx.variavel().tipo().registro().variavel().get(0).identificador().size();
                         for(int j=0;j<tamIdentRegistro;j++){
                             String nomeregistro = identificador + "." + ctx.variavel().tipo().registro().variavel().get(0).identificador().get(j).getText();
                             pilhaDeTabelas.topo().adicionarSimbolo(nomeregistro, ctx.variavel().tipo().registro().variavel().get(0).tipo().getText());
                         }
-                        
-                        System.out.println(pilhaDeTabelas.getTodasTabelas());
-                    } else if (ctx.variavel().tipo().tipo_estendido() != null) {
+                    } else if (ctx.variavel().tipo().tipo_estendido() != null) { //se o tipo for um tipo estendido
                         if (tipo.equalsIgnoreCase("literal") || tipo.equalsIgnoreCase("inteiro") || tipo.equalsIgnoreCase("real") || tipo.equalsIgnoreCase("logico")) {
                             pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
                         } else if (tipo.equalsIgnoreCase("^literal") || tipo.equalsIgnoreCase("^inteiro") || tipo.equalsIgnoreCase("^real") || tipo.equalsIgnoreCase("^logico")) {
                             pilhaDeTabelas.topo().adicionarSimbolo(identificador, tipo);
-                            System.out.println(pilhaDeTabelas.getTodasTabelas());
                         } else {
                             out.println("Linha " + ctx.variavel().getStart().getLine() + ": tipo " + tipo + " nao declarado");
                         }
@@ -103,7 +99,6 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
         }
         // declaracao_local : 'tipo' IDENT ':' tipo
         /*if (ctx.tipo() != null) {
-            System.out.println("tem registro no codigo " + ctx.IDENT().getText());
             if (!pilhaDeTabelas.topo().existeSimbolo(ctx.IDENT().getText())) {
                 pilhaDeTabelas.topo().adicionarSimbolo(ctx.IDENT().getText(), ctx.tipo().getText());
                 System.out.println(ctx.IDENT().getText());
@@ -116,7 +111,8 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
     @Override
     public Void visitCmdAtribuicao(LAParser.CmdAtribuicaoContext ctx) {
         String textoidentificador = ctx.identificador().getText();
-        System.out.println(textoidentificador);
+        
+        //se o identificador não está na tabela de simbolos
         if (!pilhaDeTabelas.existeSimbolo(textoidentificador)) {
             out.println("Linha " + ctx.start.getLine() + ": identificador " + textoidentificador + " nao declarado");
             return null;
@@ -132,7 +128,6 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
                 termo = ctx.expressao().termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().size();
             }
 
-            //System.out.println("O tamanho do termo eh: " + termo);
             for (int i = 0; i < termo; i++) {
                 String textotermo;
                 String tipotermo;
@@ -210,8 +205,21 @@ public class LASemanticAnalyzer extends LABaseVisitor<Void> {
                     out.println("Linha " + ctx.expressao().get(1).termo_logico().get(0).fator_logico().get(0).parcela_logica().exp_relacional().exp_aritmetica().get(0).termo().get(i).getStart().getLine() + ": identificador " + textotermo + " nao declarado");
                 }
             }
-
         }
         return null;
     }
+    
+    /*@Override
+    public Void visitCmdEnquanto(LAParser.CmdEnquantoContext ctx){
+        System.out.println(ctx.expressao().getText());
+        visitChildren(ctx);
+        //System.out.println(ctx.expressao().getText());
+        
+        return null;
+    }
+    @Override
+    public Void visitExpressao(LAParser.ExpressaoContext ctx){
+        System.out.println("oi " + ctx.termo_logico().get(0).getText());
+        return null;
+    }*/
 }
